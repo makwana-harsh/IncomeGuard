@@ -19,10 +19,10 @@ Premium	         ₹50	              ₹800	      4 days/week
 
 # Parametric Triggers
 Claims are triggered automatically when predefined conditions are met:
-Rainfall 50–80mm → partial payout
-Rainfall > 80mm → full payout
-AQI > 400 → Pollution-based disruption payout
-Zone Status = CLOSED → Full payout (curfew/strike)
+- Rainfall 50–80mm → partial payout
+- Rainfall > 80mm → full payout
+- AQI > 400 → Pollution-based disruption payout
+- Zone Status = CLOSED → Full payout (curfew/strike)
 
 # Claim Logic
 When a trigger is activated:
