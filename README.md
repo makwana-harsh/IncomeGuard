@@ -58,9 +58,9 @@ and mass fake claims are detected and prevented.
 7. Payout processed
 
 # Tech Stack
-Backend: FastAPI
-Frontend: React
-Database: MySQL
-APIs: Weather API, AQI API
-ML: Python (Scikit-learn)
+- Backend: FastAPI
+- Frontend: React
+- Database: MySQL
+- APIs: Weather API, AQI API
+- ML: Python (Scikit-learn)
 
