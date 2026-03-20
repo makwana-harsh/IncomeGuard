@@ -12,9 +12,9 @@ working hours, but there is no system to compensate for this loss.
 Premium is determined using AI-based risk scoring based on the worker’s operating zone.
 High-risk areas (frequent rain/pollution) have slightly higher premiums.
 The system provides flexible weekly plans like :
-- Basic plan -> ₹20/week -> ₹300/day -> 3 days/week
-- Standard plan -> ₹30/week -> ₹500/day -> 3 days/week
-- Premium	plan -> ₹50/week -> ₹800/day -> 4 days/week
+- Basic plan -> ₹20/week Premium -> ₹300/day payout -> Max 3 days/week payout
+- Standard plan -> ₹30/week Premium -> ₹500/day payout -> Max 3 days/week payout
+- Premium	plan -> ₹50/week Premium-> ₹800/day payout -> Max 4 days/week payout
 
 # Parametric Triggers
 Claims are triggered automatically when predefined conditions are met:
