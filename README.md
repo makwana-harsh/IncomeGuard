@@ -106,45 +106,133 @@ The system provides flexible weekly plans like :
 # About Parametric Triggers
 In Phase 2, we transitioned from rule-based triggers to an AI-driven trigger mechanism using the same trained Random Forest model.
 
-# Previous Approach (Phase 1)
-- Fixed thresholds such as:
-  - Rainfall > 80mm → payout
-  - High temperature > 45 degree cel → payout
-This approach lacked flexibility and could not accurately capture real-world disruption patterns.
+  # Previous Approach (Phase 1)
+  - Fixed thresholds such as:
+    - Rainfall > 80mm → payout
+    - High temperature > 45 degree cel → payout
+  This approach lacked flexibility and could not accurately capture real-world disruption patterns.
+  
+  # Updated Approach (Phase 2)
+  We now use a machine learning-based trigger system:
+  1. The system fetches real-time weather data for the worker’s location.
+  2. Data is filtered specifically for the worker’s active working hours.
+  3. Relevant features are extracted, such as:
+     - Rainfall during working hours
+     - Max rain intensity
+     - High rain + flood
+     - Extreme heat hours
+     - Extreme cold hours
+  4. The processed data is fed into the trained Random Forest model.
+  
+  # Decision Logic
+  - The model predicts a risk probability of income disruption.
+  - If : Risk Probability ≥ 0.85 (85%)
+        → Claim is automatically triggered  
+        → Payout is processed  
+  - Otherwise:
+        → No payout is initiated  
+  
+  # Key Advantages
+  - Eliminates rigid thresholds and edge-case errors
+  - Captures combined effects (e.g., heavy rain + flood hours+ High speed wind)
+  - Personalized decision-making based on worker’s location and timing
+  - More robust against manipulation and false claims
+  
+  # Automatic Payout
+  - System uses actual observed data instead of forecast because claiming process is done after finishing the woking hours of worker
+  - Ensures payouts are based on real disruptions experienced, not predictions
+  - if predicted risk from the model is above or equal 85% then payout is processed.
+  
+  # Reason behind the usage of the same model
+  - Random forest can not find the difference between 7 days data and 1 day data
+  - So we extract the same features for that 1 day data and provide to the model
+  - Model is trained on 7500+ data samples that include lots of different weather conditions so it is highly reliable and accurate
+  - It predicts correct result of 7 days data and 1 day data
 
-# Updated Approach (Phase 2)
-We now use a machine learning-based trigger system:
-1. The system fetches real-time weather data for the worker’s location.
-2. Data is filtered specifically for the worker’s active working hours.
-3. Relevant features are extracted, such as:
-   - Rainfall during working hours
-   - Max rain intensity
-   - High rain + flood
-   - Extreme heat hours
-   - Extreme cold hours
-4. The processed data is fed into the trained Random Forest model.
 
-# Decision Logic
-- The model predicts a risk probability of income disruption.
-- If : Risk Probability ≥ 0.85 (85%)
-      → Claim is automatically triggered  
-      → Payout is processed  
-- Otherwise:
-      → No payout is initiated  
+#### System Workflow
+1. User Onboarding
+- A new user registers and creates an account on the platform.
+- 
+2. Premium Discovery & Risk Assessment
+- The user clicks on "Show Available Plans".
+- The system collects:
+  - Current working location
+  - Daily working hours (start time – end time)
 
-# Key Advantages
-- Eliminates rigid thresholds and edge-case errors
-- Captures combined effects (e.g., heavy rain + flood hours+ High speed wind)
-- Personalized decision-making based on worker’s location and timing
-- More robust against manipulation and false claims
+- This information is mandatory because:
+  - Risk varies by location
+  - Disruptions only matter during active working hours
 
-# Automatic Payout
-- System uses actual observed data instead of forecast because claiming process is done after finishing the woking hours of worker
-- Ensures payouts are based on real disruptions experienced, not predictions
-- if predicted risk from the model is above or equal 85% then payout is processed.
+- The system:
+  - Fetches upcoming week's weather forecast for that entered location
+  - Processes and normalizes the data relative to the selected location
+  - Feeds it into the trained Random Forest model
 
-# Reason behind the usage of the same model
-- Random forest can not find the difference between 7 days data and 1 day data
-- So we extract the same features for that 1 day data and provide to the model
-- Model is trained on 7500+ data samples that include lots of different weather conditions so it is highly reliable and accurate
-- It predicts correct result of 7 days data and 1 day data
+- Based on predicted risk, the system dynamically suggests suitable weekly plans.
+  
+3. Plan Selection & Locking
+- The user selects a weekly insurance plan (Basic / Standard / Premium).
+- Once selected:
+  - Plan is locked for 1 week
+  - Location is locked for 1 week
+  - Working hours are locked for 1 week
+
+- This prevents:
+  - Fraudulent manipulation
+  - Frequent changes to exploit payouts
+
+4. Daily Automated Monitoring
+- For each day of the active week:
+  - After the user’s working hours end:
+    - The system automatically triggers evaluation
+
+- The system:
+  - Fetches real-time weather data (via API)
+  - Filters data for the user’s working hours only
+  - Extracts relevant features
+  - Sends data to the Random Forest model
+
+5. Claim Decision & Payout
+- The model predicts disruption risk probability
+- If: Risk ≥ 85%
+  → Claim is automatically approved  
+  → Payout is processed  
+- Else:
+  → Claim is rejected  
+
+- This process runs daily during the policy week
+  
+6. Weekly Cycle Reset
+- At the end of the week:
+  - The policy expires
+  - User can:
+    - Select a new plan
+    - Update location
+    - Update working hours
+
+# Design Decisions & Justification
+
+# Why Multiple Plans?
+- Different users have different affordability levels
+- Ensures inclusivity across income segments
+
+# Why Capture Location?
+- Gig workers operate in dynamic locations
+- Risk varies significantly across cities and zones
+
+# Why Capture Working Hours?
+- Disruptions only matter if they occur during working time
+- Prevents false payouts (e.g., rain at night when user is not working)
+
+# Why Location-Normalized Features?
+- Environmental conditions vary by city
+- Example:
+  - AQI 200 may be normal in Delhi
+  - But severe in Pune
+- Normalization ensures fair and accurate risk prediction
+
+# Why Daily Evaluation Instead of Weekly?
+- Ensures precise and fair payouts
+- Captures real disruptions instead of aggregated assumptions
+
