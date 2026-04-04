@@ -67,17 +67,17 @@ and mass fake claims are detected and prevented.
 
 Phase 2
 
-# About Weekly Premium Model
+#### About Weekly Premium Model
 Premium is determined using an AI-driven risk scoring system powered by a trained Random Forest model.
 - The Random Forest model is trained on 4 years of historical weather data collected from 9 major Indian cities.
 - ahmedabad, pune, mumbai, delhi, chennai, bangalore, jaipur, kolkata, hyderabad
 - The dataset includes featues like:
-  - Rainfall levels
-  - Temperature patterns
-  - high wind
-  - high rain flood
-  - extreme heat hours
-  - extreme cold hours 
+  - Location relative max rain intensity
+  - Location relative max rain hours
+  - Location relative high wind speed
+  - Location relative high rain + flood
+  - Location relative extreme heat hours
+  - Location relative extreme cold hours etc.
 - Total 7500+ historical data samples enables the model to learn patterns between environmental conditions and potential income disruption risks.
 
 # Risk Prediction Approach
@@ -103,7 +103,7 @@ The system provides flexible weekly plans like :
 - Premium	plan -> ₹100/week Premium-> ₹700/day payout 
 
 
-# About Parametric Triggers
+#### About Parametric Triggers
 In Phase 2, we transitioned from rule-based triggers to an AI-driven trigger mechanism using the same trained Random Forest model.
 
   # Previous Approach (Phase 1)
@@ -142,12 +142,32 @@ In Phase 2, we transitioned from rule-based triggers to an AI-driven trigger mec
   - System uses actual observed data instead of forecast because claiming process is done after finishing the woking hours of worker
   - Ensures payouts are based on real disruptions experienced, not predictions
   - if predicted risk from the model is above or equal 85% then payout is processed.
-  
-  # Reason behind the usage of the same model
-  - Random forest can not find the difference between 7 days data and 1 day data
-  - So we extract the same features for that 1 day data and provide to the model
-  - Model is trained on 7500+ data samples that include lots of different weather conditions so it is highly reliable and accurate
-  - It predicts correct result of 7 days data and 1 day data
+
+#### Reason Behind Using the Same Model for Premium & Triggers
+- The Random Forest model is trained on feature-based representations of weather conditions rather than time-specific sequences.
+- Instead of depending on whether the data represents 7 days or 1 day, the model learns patterns from engineered features such as:
+  - Location relative max rain hours
+  - Location relative high wind speed
+  - Location relative high rain + flood etc.
+
+- Therefore, by extracting the same set of features from:
+  - Weekly forecast data (for premium calculation)
+  - Daily real-time data (for claim triggering), we ensure consistency in model input and predictions.
+
+# Generalization Capability
+- The model is trained on 7500+ real historical samples across diverse weather conditions and cities, enabling it to generalize well across different scenarios.
+- This allows it to reliably predict disruption risk for both:
+  - Aggregated weekly data
+  - Single-day real-time data
+  - 
+# Forecast vs Real Data Usage
+- When using forecast data:
+  - The model predicts the expected risk of income loss
+  - This is used for premium pricing
+
+- When using real observed data:
+  - The model predicts the actual likelihood of income disruption
+  - This is used for claim triggering and payout decisions
 
 
 #### System Workflow
@@ -211,7 +231,7 @@ In Phase 2, we transitioned from rule-based triggers to an AI-driven trigger mec
     - Update location
     - Update working hours
 
-# Design Decisions & Justification
+#### Design Decisions & Justification
 
 # Why Multiple Plans?
 - Different users have different affordability levels
