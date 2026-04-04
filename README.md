@@ -159,7 +159,7 @@ In Phase 2, we transitioned from rule-based triggers to an AI-driven trigger mec
 - This allows it to reliably predict disruption risk for both:
   - Aggregated weekly data
   - Single-day real-time data
-  - 
+    
 # Forecast vs Real Data Usage
 - When using forecast data:
   - The model predicts the expected risk of income loss
@@ -173,7 +173,7 @@ In Phase 2, we transitioned from rule-based triggers to an AI-driven trigger mec
 #### System Workflow
 1. User Onboarding
 - A new user registers and creates an account on the platform.
-- 
+
 2. Premium Discovery & Risk Assessment
 - The user clicks on "Show Available Plans".
 - The system collects:
